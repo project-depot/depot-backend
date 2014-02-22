@@ -149,7 +149,7 @@ func initializeCommands() {
 			quads := strings.Split(socket.Host(), ".")
 			target := fmt.Sprintf("(%s,%s,%s,%s,%d,%d)", quads[0], quads[1], quads[2], quads[3], p1, p2)
 			msg := "Entering Passive Mode " + target
-			c.WriteMessage(getMessageFormat(425), msg)
+			c.WriteMessage(getMessageFormat(227), msg)
 		},
 		"PORT": func(c *FTPConn, p []string) {
 			// TODOLATER: Implement active mode
