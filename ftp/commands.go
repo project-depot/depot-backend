@@ -119,7 +119,7 @@ func initializeCommands() {
 		},
 		"CWD": func(c *FTPConn, p []string) {
 			// TODO: Add real functionality
-			c.WriteMessage(getMessageFormat(250), `Directory changed to "/"`)
+			c.WriteMessage(getMessageFormat(250), `Directory changed to "`+c.cwd+`"`)
 		},
 		"PWD": func(c *FTPConn, p []string) {
 			// TODO: Add real functionality
@@ -166,7 +166,7 @@ func initializeCommands() {
 		"LIST": func(c *FTPConn, p []string) {
 			c.WriteMessage(getMessageFormat(150), "Opening ASCII mode data connection for file list")
 			var output string
-			files, _ := ioutil.ReadDir("/")
+			files, _ := ioutil.ReadDir(c.cwd)
 			for _, f := range files {
 				output += FileString(f)
 				output += "\r\n"
