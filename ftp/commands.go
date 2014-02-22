@@ -122,8 +122,7 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(250), `Directory changed to "`+c.cwd+`"`)
 		},
 		"PWD": func(c *FTPConn, p []string) {
-			// TODO: Add real functionality
-			c.WriteMessage(getMessageFormat(257), `"/"`)
+			c.WriteMessage(getMessageFormat(257), `"`+c.cwd+`"`)
 		},
 		"TYPE": func(c *FTPConn, p []string) {
 			dataEncodingParam := p[1]
