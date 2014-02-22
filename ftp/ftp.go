@@ -9,12 +9,6 @@ import (
 const (
 	rootDir        = "/"
 	welcomeMessage = "Welcome to Depot."
-	USER           = "USER"
-	PASS           = "PASS"
-	PWD            = "PWD"
-	STAT           = "STAT"
-	CWD            = "CWD"
-	FEAT           = "FEAT"
 )
 
 var (
