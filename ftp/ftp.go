@@ -15,30 +15,18 @@ const (
 	PASS           = "PASS"
 	PWD            = "PWD"
 	STAT           = "STAT"
+	CWD            = "CWD"
+	FEAT           = "FEAT"
+)
+
+var (
+	dataEncoding string = "A"
 )
 
 func getMessageFormat(command int) (messageFormat string) {
-	switch command {
-	case 212:
-		messageFormat = "212 %s"
-		break
-	case 220:
-		messageFormat = "220 %s"
-		break
-	case 230:
-		messageFormat = "230 %s"
-		break
-	case 257:
-		messageFormat = "257 %s"
-		break
-	case 331:
-		messageFormat = "331 %s"
-		break
-	case 500:
-		messageFormat = "500 %s"
-		break
-	}
-	return messageFormat + "\r\n"
+	output := fmt.Sprintf("%d %%s\r\n", command)
+	fmt.Println(output)
+	return output
 }
 
 type Array struct {
@@ -139,24 +127,12 @@ func (ftpConn *FTPConn) Serve(terminated chan bool) {
 		count := len(params)
 		if count > 0 {
 			command := params[0]
-			switch command {
-			case USER:
-				ftpConn.WriteMessage(getMessageFormat(331), "User name ok, password required")
-				break
-			case PASS:
-				ftpConn.WriteMessage(getMessageFormat(230), "Password ok, continue")
-				break
-			case PWD:
-				ftpConn.WriteMessage(getMessageFormat(257), "/")
-				break
-			case STAT:
-				ftpConn.WriteMessage(getMessageFormat(212), "")
-				break
-			default:
+			commandFunc := commands[command]
+			if commandFunc != nil {
+				commandFunc(ftpConn, params)
+			} else {
 				ftpConn.WriteMessage(getMessageFormat(500), "Command not found")
 			}
-		} else {
-			ftpConn.WriteMessage(getMessageFormat(500), "Syntax error, zero parameters")
 		}
 	}
 	terminated <- true
@@ -171,6 +147,7 @@ func (ftpConn *FTPConn) Close() {
 }
 
 func main() {
+	initializeCommands()
 	laddr, err := net.ResolveTCPAddr("tcp", "localhost:2021")
 	if err != nil {
 		log.Fatal(err)
