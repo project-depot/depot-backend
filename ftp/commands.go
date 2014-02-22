@@ -132,8 +132,7 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(230), "Password good to go, continue")
 		},
 		"PASV": func(c *FTPConn, p []string) {
-			// TODO: Implement passive mode
-			c.WriteMessage(getMessageFormat(227), "")
+			passive = true
 		},
 		"PORT": func(c *FTPConn, p []string) {
 			// TODOLATER: Implement active mode
