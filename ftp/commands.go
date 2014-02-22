@@ -181,7 +181,15 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(202), "")
 		},
 		"RETR": func(c *FTPConn, p []string) {
-			// TODO: Implement this
+			path := p[1]
+			bytes, err := ioutil.ReadFile(path)
+			if err != nil {
+				c.WriteMessage(getMessageFormat(551), "File not available.")
+				return
+			}
+
+			c.WriteMessage(getMessageFormat(150), "Data transfer starting "+strconv.Itoa(len(bytes))+" bytes")
+			c.SendOutOfBandData(string(bytes))
 		},
 		"STOR": func(c *FTPConn, p []string) {
 			path := p[1]
