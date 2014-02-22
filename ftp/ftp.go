@@ -26,7 +26,6 @@ var (
 
 func getMessageFormat(command int) (messageFormat string) {
 	output := fmt.Sprintf("%d %%s\r\n", command)
-	fmt.Println(output)
 	return output
 }
 
