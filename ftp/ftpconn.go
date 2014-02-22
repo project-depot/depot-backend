@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strconv"
 	"strings"
 )
 
@@ -48,6 +49,14 @@ func (ftpConn *FTPConn) Serve(terminated chan bool) {
 	}
 	terminated <- true
 	log.Print("Connection Terminated")
+}
+
+func (ftpConn *FTPConn) SendOutOfBandData(data string) {
+	bytes := len(data)
+	ftpConn.data.Write([]byte(data))
+	ftpConn.data.Close()
+	message := "Closing data connection, sent " + strconv.Itoa(bytes) + " bytes"
+	ftpConn.WriteMessage(getMessageFormat(226), message)
 }
 
 func (ftpConn *FTPConn) Close() {

@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"strings"
+)
+
 var commands map[string]func(ftpConn *FTPConn, p []string)
 
 func initializeCommands() {
@@ -132,7 +137,19 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(230), "Password good to go, continue")
 		},
 		"PASV": func(c *FTPConn, p []string) {
-			passive = true
+			socket, err := NewPassiveSocket()
+			if err != nil {
+				c.WriteMessage(getMessageFormat(425), "Data connection failed")
+				return
+			}
+			c.data = socket
+			p1 := socket.Port() / 256
+			p2 := socket.Port() - (p1 * 256)
+
+			quads := strings.Split(socket.Host(), ".")
+			target := fmt.Sprintf("(%s,%s,%s,%s,%d,%d)", quads[0], quads[1], quads[2], quads[3], p1, p2)
+			msg := "Entering Passive Mode " + target
+			c.WriteMessage(getMessageFormat(425), msg)
 		},
 		"PORT": func(c *FTPConn, p []string) {
 			// TODOLATER: Implement active mode
