@@ -166,7 +166,7 @@ func initializeCommands() {
 		"LIST": func(c *FTPConn, p []string) {
 			c.WriteMessage(getMessageFormat(150), "Opening ASCII mode data connection for file list")
 			var output string
-			files, _ := ioutil.ReadDir("./")
+			files, _ := ioutil.ReadDir("/")
 			for _, f := range files {
 				output += FileString(f)
 				output += "\r\n"
