@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -184,7 +185,11 @@ func initializeCommands() {
 			// TODO: Implement this
 		},
 		"DELE": func(c *FTPConn, p []string) {
-			// TODO: Implement this
+			if err := os.Remove(p[1]); err != nil {
+				c.WriteMessage(getMessageFormat(550), "Action not taken. "+err.Error())
+				return
+			}
+			c.WriteMessage(getMessageFormat(250), "File deleted")
 		},
 		"RNFR": func(c *FTPConn, p []string) {
 			// TODO: Rename from
