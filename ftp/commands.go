@@ -113,8 +113,17 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(257), `"/"`)
 		},
 		"TYPE": func(c *FTPConn, p []string) {
-			// TODO: Add real functionality
-			c.WriteMessage(getMessageFormat(200), "")
+			dataEncodingParam := p[1]
+			if dataEncodingParam == "A" || dataEncodingParam == "I" {
+				if dataEncodingParam == "A" {
+					dataEncoding = asciiEncoding
+				} else {
+					asciiEncoding = "binary"
+				}
+				c.WriteMessage(getMessageFormat(200), "")
+			} else {
+				c.WriteMessage(getMessageFormat(501), "")
+			}
 		},
 		"USER": func(c *FTPConn, p []string) {
 			c.WriteMessage(getMessageFormat(331), "User name OK, password required")

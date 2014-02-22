@@ -20,7 +20,8 @@ const (
 )
 
 var (
-	dataEncoding string = "A"
+	dataEncoding  string = "A"
+	asciiEncoding string = "binary"
 )
 
 func getMessageFormat(command int) (messageFormat string) {
