@@ -124,8 +124,7 @@ func (ftpConn *FTPConn) Serve(terminated chan bool) {
 		}
 		log.Print(line)
 		params := strings.Split(strings.Trim(line, "\r\n"), " ")
-		count := len(params)
-		if count > 0 {
+		if len(params) > 0 {
 			command := params[0]
 			commandFunc := commands[command]
 			if commandFunc != nil {
