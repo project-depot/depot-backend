@@ -118,7 +118,7 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(215), "Go FTP awesome server")
 		},
 		"CWD": func(c *FTPConn, p []string) {
-			// TODO: Add real functionality
+			c.cwd = p[1]
 			c.WriteMessage(getMessageFormat(250), `Directory changed to "`+c.cwd+`"`)
 		},
 		"PWD": func(c *FTPConn, p []string) {
