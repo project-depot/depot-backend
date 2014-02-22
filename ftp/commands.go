@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strings"
 )
 
@@ -163,7 +164,14 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(202), "")
 		},
 		"LIST": func(c *FTPConn, p []string) {
-			// TODO: Implement this
+			c.WriteMessage(getMessageFormat(150), "Opening ASCII mode data connection for file list")
+			var output string
+			files, _ := ioutil.ReadDir("./")
+			for _, f := range files {
+				output += FileString(f)
+				output += "\r\n"
+			}
+			c.SendOutOfBandData(output)
 		},
 		"NLST": func(c *FTPConn, p []string) {
 			// TODO: Just the list of file names
