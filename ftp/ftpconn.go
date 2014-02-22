@@ -13,7 +13,7 @@ type FTPConn struct {
 	control       *net.TCPConn
 	controlReader *bufio.Reader
 	controlWriter *bufio.Writer
-	data          *net.TCPConn
+	data          FTPDataSocket
 }
 
 func (ftpConn *FTPConn) WriteMessage(messageFormat string, v ...interface{}) (wrote int, err error) {
