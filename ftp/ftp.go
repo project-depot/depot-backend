@@ -10,7 +10,7 @@ import (
 
 const (
 	rootDir        = "/"
-	welcomeMessage = "Welcome to the Go FTP Server"
+	welcomeMessage = "Welcome to Depot."
 	USER           = "USER"
 	PASS           = "PASS"
 	PWD            = "PWD"
