@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -21,7 +23,7 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(202), "")
 		},
 		"ALLO": func(c *FTPConn, p []string) {
-			c.WriteMessage(getMessageFormat(202), "")
+			c.WriteMessage(getMessageFormat(202), "Deprecated")
 		},
 		"APPE": func(c *FTPConn, p []string) {
 			c.WriteMessage(getMessageFormat(202), "")
@@ -182,7 +184,29 @@ func initializeCommands() {
 			// TODO: Implement this
 		},
 		"STOR": func(c *FTPConn, p []string) {
-			// TODO: Implement this
+			path := p[1]
+			transferError := "Error during transfer"
+
+			fmt.Println("it werks")
+
+			c.WriteMessage(getMessageFormat(150), "Beginning data transfer...")
+			tmpFile, err := ioutil.TempFile("", "stor")
+			if err != nil {
+				c.WriteMessage(getMessageFormat(450), transferError)
+				return
+			}
+			bytes, err := io.Copy(tmpFile, c.data)
+			if err != nil {
+				c.WriteMessage(getMessageFormat(450), transferError)
+			}
+			tmpFile.Seek(0, 0)
+
+			if err := os.Rename(tmpFile.Name(), path); err != nil {
+				c.WriteMessage(getMessageFormat(550), "Action not taken. "+err.Error())
+				return
+			}
+
+			c.WriteMessage(getMessageFormat(226), "All is well, received "+strconv.Itoa(int(bytes))+" bytes")
 		},
 		"DELE": func(c *FTPConn, p []string) {
 			if err := os.Remove(p[1]); err != nil {
