@@ -13,15 +13,23 @@ const (
 	welcomeMessage = "Welcome to the Go FTP Server"
 	USER           = "USER"
 	PASS           = "PASS"
+	PWD            = "PWD"
+	STAT           = "STAT"
 )
 
 func getMessageFormat(command int) (messageFormat string) {
 	switch command {
+	case 212:
+		messageFormat = "212 %s"
+		break
 	case 220:
 		messageFormat = "220 %s"
 		break
 	case 230:
 		messageFormat = "230 %s"
+		break
+	case 257:
+		messageFormat = "257 %s"
 		break
 	case 331:
 		messageFormat = "331 %s"
@@ -137,6 +145,12 @@ func (ftpConn *FTPConn) Serve(terminated chan bool) {
 				break
 			case PASS:
 				ftpConn.WriteMessage(getMessageFormat(230), "Password ok, continue")
+				break
+			case PWD:
+				ftpConn.WriteMessage(getMessageFormat(257), "/")
+				break
+			case STAT:
+				ftpConn.WriteMessage(getMessageFormat(212), "")
 				break
 			default:
 				ftpConn.WriteMessage(getMessageFormat(500), "Command not found")
