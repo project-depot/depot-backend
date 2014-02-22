@@ -40,7 +40,14 @@ func initializeCommands() {
 			c.WriteMessage(getMessageFormat(202), "")
 		},
 		"EPSV": func(c *FTPConn, p []string) {
-			c.WriteMessage(getMessageFormat(202), "")
+			socket, err := NewPassiveSocket()
+			if err != nil {
+				c.WriteMessage(getMessageFormat(425), "Data connection failed")
+				return
+			}
+			c.data = socket
+			msg := fmt.Sprintf("Entering Extended Passive Mode (|||%d|)", socket.Port())
+			c.WriteMessage(getMessageFormat(229), msg)
 		},
 		"HELP": func(c *FTPConn, p []string) {
 			c.WriteMessage(getMessageFormat(202), "")
