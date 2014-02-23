@@ -53,7 +53,7 @@ func (a *Array) Remove(object interface{}) (result bool) {
 
 func main() {
 	initializeCommands()
-	laddr, err := net.ResolveTCPAddr("tcp", "localhost:2021")
+	laddr, err := net.ResolveTCPAddr("tcp", "0.0.0.0:2021")
 	if err != nil {
 		log.Fatal(err)
 	}
