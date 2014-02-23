@@ -17,12 +17,14 @@ func (ftpServer *FTPServer) Listen() (err error) {
 		if err != nil {
 			break
 		}
-		ftpServer.connections.Append(ftpConn)
-		terminated := make(chan bool)
-		go ftpConn.Serve(terminated)
-		<-terminated
-		ftpServer.connections.Remove(ftpConn)
-		ftpConn.Close()
+		go func(ftpConn *FTPConn) {
+			ftpServer.connections.Append(ftpConn)
+			terminated := make(chan bool)
+			go ftpConn.Serve(terminated)
+			<-terminated
+			ftpServer.connections.Remove(ftpConn)
+			ftpConn.Close()
+		}(ftpConn)
 	}
 	return
 }
